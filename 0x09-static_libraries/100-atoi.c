@@ -1,26 +1,50 @@
 #include "main.h"
+
 /**
- * _atoi - to convert a string into an integer.
- * @s: the string to use in progrm
+ * _atoi - Convert a string to an integer
+ * @s: Pointer to the string to convert
  *
- * Return: integer
+ * Return: The integer that was converted
  */
 int _atoi(char *s)
 {
-	int sig = 1, i = 0;
-	unsigned int using = 0;
+	int i, start, negative;
+	unsigned int number;
 
-	while (!(s[i] <= '9' && s[i] >= '0') && s[i] != '\0')
+	start = -1;
+	negative = 0;
+	number = 0;
+	for (i = 0; s[i] != '\0'; i++)
 	{
-		if (s[i] == '-')
-				sig *= -1;
-				i++;
+		if (s[i] >= '0' && s[i] <= '9')
+			start = i;
+
+		if (s[i] == '-' && start == -1)
+		{
+			if (negative)
+				negative = 0;
+			else
+				negative = 1;
+		}
 	}
-	while (s[i] <= '9' && (s[i] >= '0' && s[i] != '\0'))
+
+	if (start != -1)
 	{
-		using = (using * 10) + (s[i] - '0');
-		i++;
+		for (i = 0; s[i] != '\0'; i++)
+		{
+			if (s[i] >= '0' && s[i] <= '9')
+				number = number * 10 + s[i] - '0';
+			else if (s[i - 1] >= '0' && s[i - 1] <= '9')
+				break;
+		}
 	}
-	using *= sig;
-	return (using);
+
+	if ((number >= (unsigned int) INT_MAX && negative == 0))
+		return (INT_MAX);
+	else if ((number > (unsigned int) INT_MAX && negative))
+		return (INT_MIN);
+	else if (negative)
+		return ((int) -number);
+	else
+		return ((int) number);
 }
